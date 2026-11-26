@@ -1,0 +1,463 @@
+/* Off the clock: three tabs (art, anime, chess) over one full-width stage. */
+
+.intr {
+  --ink: #f5f5f7;
+  --ink-2: #b0b0b8;
+  --ink-3: #8a8a93;
+  --pink: #ff5b8a;
+  --hair: rgba(255, 255, 255, 0.08);
+  --mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
+  background: #08080a;
+  color: var(--ink);
+  padding: clamp(60px, 10vh, 120px) 0;
+}
+.intr .mono {
+  font-family: var(--mono);
+}
+.intr-wrap {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4.5vw, 56px);
+}
+
+/* ── Header ── */
+.intr-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  margin-bottom: 28px;
+}
+.intr-title {
+  margin-top: 18px;
+  font-size: clamp(34px, 5.2vw, 68px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.03;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+/* ── Stage ── */
+/* No box — full-bleed, transparent; panels live directly on the page. */
+.intr-stage {
+  position: relative;
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  height: clamp(680px, 88vh, 920px);
+  overflow: hidden;
+  background: transparent;
+}
+.intr-panel {
+  position: relative;
+  height: 100%;
+}
+
+/* ── Tag rail ── */
+.intr-rail {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(4px, 1vw, 14px);
+  margin-bottom: clamp(20px, 3vh, 36px);
+}
+.intr-pill {
+  position: relative;
+  border: 0;
+  background: none;
+  border-radius: 999px;
+  padding: 12px clamp(18px, 2vw, 30px);
+  font-size: clamp(19px, 2vw, 30px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: transform 160ms var(--ease-out), color 0.2s;
+  min-height: 44px;
+  isolation: isolate;
+}
+@media (hover: hover) and (pointer: fine) {
+  .intr-pill:hover:not(.is-active) {
+    color: var(--ink);
+  }
+}
+.intr-pill:active {
+  transform: scale(0.97);
+}
+.intr-pill.is-active {
+  color: #0a0a0c;
+}
+.intr-pill-ind {
+  position: absolute;
+  inset: 0;
+  background: var(--pink);
+  border-radius: 999px;
+  z-index: -1;
+  box-shadow: 0 14px 40px -8px rgba(255, 91, 138, 0.55);
+}
+.intr-pill-label {
+  position: relative;
+}
+
+
+/* ============================================================
+   Illustration
+   ============================================================ */
+.ill {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 3vh, 34px);
+  padding: clamp(12px, 2.5vh, 30px);
+}
+.ill-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ill-frame {
+  position: relative;
+  height: 100%;
+  width: min(1100px, 78vw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ill-img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 3px;
+  box-shadow: 0 40px 100px -28px rgba(0, 0, 0, 0.85);
+}
+/* prev / next peeking into the side space */
+.ill-peek {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(110px, 17vw, 300px);
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.26;
+  filter: saturate(0.7);
+  transition: opacity 0.3s ease, filter 0.3s ease;
+  z-index: 1;
+}
+.ill-peek img {
+  width: 100%;
+  max-height: 52vh;
+  object-fit: contain;
+  border-radius: 3px;
+}
+.ill-peek--l { left: clamp(8px, 3vw, 64px); }
+.ill-peek--r { right: clamp(8px, 3vw, 64px); }
+.ill-peek:hover { opacity: 0.6; filter: saturate(1); }
+.ill-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.ill-dot-hit {
+  padding: 8px 4px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.ill-dot {
+  display: block;
+  height: 6px;
+  border-radius: 3px;
+}
+@media (max-width: 900px) {
+  .ill-peek { display: none; }
+  .ill-frame { width: 92vw; }
+}
+
+/* ============================================================
+   Chess
+   ============================================================ */
+.chess {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(24px, 5vw, 60px);
+  height: 100%;
+  padding: 24px;
+}
+.chess-boardwrap {
+  position: relative;
+}
+.chess-bloom {
+  position: absolute;
+  inset: -25%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 91, 138, 0.35), transparent 60%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+/* Board — chess.com-style green/cream, soft rounding, deep drop shadow. */
+.chess-board {
+  position: relative;
+  width: min(620px, 68vh);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8);
+  z-index: 1;
+}
+.chess-sq {
+  position: relative;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.chess-sq.is-light {
+  background: #ebecd0;
+}
+.chess-sq.is-dark {
+  background: #739552;
+}
+/* Legal-move hint — translucent dark dot, chess.com style, readable on both
+   square colours. */
+.chess-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  background: rgba(8, 8, 10, 0.22);
+}
+.chess-piece {
+  position: absolute;
+  width: 12.5%;
+  height: 12.5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-size: clamp(34px, 6.6vh, 62px);
+  line-height: 1;
+  z-index: 2;
+  border-radius: 6px;
+}
+.chess-piece.is-selected {
+  outline: 2px solid var(--pink);
+  background: rgba(255, 91, 138, 0.18);
+}
+.chess-piece.is-glow {
+  border-radius: 50%;
+  background: rgba(255, 91, 138, 0.15);
+}
+/* Solid, definitive pieces: filled glyphs with a contrasting cartoon outline
+   (chess.com-style) so both colours read crisply on light AND dark squares. */
+.pc-w {
+  color: #f9f9f9;
+  text-shadow:
+    -1.5px -1.5px 0 #4c4c4c, 1.5px -1.5px 0 #4c4c4c,
+    -1.5px 1.5px 0 #4c4c4c, 1.5px 1.5px 0 #4c4c4c,
+    0 3px 4px rgba(0, 0, 0, 0.35);
+}
+.pc-b {
+  color: #262421;
+  text-shadow:
+    -1.5px -1.5px 0 #7d7a76, 1.5px -1.5px 0 #7d7a76,
+    -1.5px 1.5px 0 #7d7a76, 1.5px 1.5px 0 #7d7a76,
+    0 3px 4px rgba(0, 0, 0, 0.4);
+}
+.chess-info {
+  width: 280px;
+  max-width: 36%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.chess-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.chess-k {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--ink-3);
+}
+.chess-v {
+  font-size: 13px;
+  color: var(--ink);
+}
+.chess-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--ink-3);
+  padding-top: 10px;
+  border-top: 1px solid var(--hair);
+}
+.chess-moves {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chess-move {
+  font-size: 13px;
+}
+.chess-move--played {
+  color: var(--ink);
+}
+.chess-move--current {
+  color: var(--pink);
+}
+.chess-move--upcoming {
+  color: var(--ink-3);
+}
+.chess-next {
+  align-self: flex-start;
+  margin-top: 6px;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 3px;
+}
+
+/* ── Responsive ── (covers phones + iPad-portrait 768, where the desktop
+   chess row would otherwise overflow the stage) */
+@media (max-width: 820px) {
+  .intr-head {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Shorter stage on phones so panels aren't marooned in dead space. */
+  .intr-stage {
+    height: clamp(520px, 74vh, 660px);
+  }
+
+  /* Chess: board must fit the viewport width (was min(620px,68vh) → clipped).
+     Stack board over info, and scale the glyphs to the smaller squares. */
+  .chess {
+    flex-direction: column;
+    gap: 20px;
+    padding: 12px;
+  }
+  .chess-board {
+    width: min(440px, 88vw);
+  }
+  .chess-piece {
+    font-size: clamp(22px, 8.4vw, 40px);
+  }
+  .chess-info {
+    width: 100%;
+    max-width: 440px;
+  }
+
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .intr-pill {
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .chess-piece.is-glow {
+    animation: none;
+    box-shadow: 0 0 0 3px rgba(255, 91, 138, 0.3);
+  }
+}
+
+/* ── Anime: a ranked text list ── */
+.anime {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 0 clamp(20px, 4.5vw, 56px);
+  overflow-y: auto;
+}
+.anime-list {
+  width: min(960px, 100%);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: rank;
+}
+.anime-item {
+  counter-increment: rank;
+  display: grid;
+  grid-template-columns: 2.5ch minmax(0, 1.1fr) minmax(0, 1.4fr) auto;
+  grid-template-areas: "rank title note rating" "rank title meta rating";
+  column-gap: clamp(16px, 2.4vw, 32px);
+  align-items: baseline;
+  padding: clamp(12px, 1.6vh, 18px) 0;
+  border-top: 1px solid var(--hair);
+}
+.anime-item:last-child {
+  border-bottom: 1px solid var(--hair);
+}
+.anime-item::before {
+  content: counter(rank, decimal-leading-zero);
+  grid-area: rank;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.anime-title {
+  grid-area: title;
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.anime-note {
+  grid-area: note;
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.45;
+}
+.anime-meta {
+  grid-area: meta;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+.anime-rating {
+  grid-area: rating;
+  display: inline-flex;
+  gap: 4px;
+  align-self: center;
+}
+.anime-rating span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-3);
+}
+.anime-rating span.on {
+  background: var(--pink);
+  border-color: var(--pink);
+}
+@media (max-width: 820px) {
+  .anime {
+    place-items: start center;
+    padding-block: 8px;
+  }
+  .anime-item {
+    grid-template-columns: 2.5ch minmax(0, 1fr) auto;
+    grid-template-areas: "rank title rating" "rank note note" "rank meta meta";
+    row-gap: 4px;
+  }
+}

@@ -1,0 +1,508 @@
+/* ── Tokens ───────────────────────────────────────────── */
+:root{
+  /* surfaces — layered, not flat black */
+  --bg:      #08080a;
+  --raised:  #0f0f12;
+  --overlay: #16161a;
+  --fg:      #f5f5f7;
+  --fg-2:    #d6d6dc;
+  --muted:   #8a8a93;     /* AA against --bg */
+  --muted-2: #b0b0b8;     /* primary body muted */
+  --hairline:        rgba(255,255,255,.08);
+  --hairline-strong: rgba(255,255,255,.14);
+  --highlight:       rgba(255,255,255,.04);
+  --accent:  #ff5b8a;
+  --accent-2:#f59e0b;
+  --accent-3:#e6e6ec;
+
+  /* layout */
+  --maxw: 1320px;
+  --pad:  clamp(20px, 4.5vw, 56px);
+  --rail: 8px; /* 8pt grid base */
+
+  /* radii */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+
+  /* type — modular 1.25 ratio, fluid */
+  --step--1: clamp(12px, .72vw + 9px, 14px);
+  --step-0:  clamp(15px, .9vw + 11px, 17px);
+  --step-1:  clamp(17px, 1.1vw + 12px, 20px);
+  --step-2:  clamp(20px, 1.4vw + 14px, 26px);
+  --step-3:  clamp(26px, 2.2vw + 16px, 38px);
+  --step-4:  clamp(34px, 3.4vw + 18px, 56px);
+  --step-5:  clamp(46px, 5.4vw + 20px, 84px);
+  --step-6:  clamp(64px, 11vw + 16px, 168px);
+  --step-7:  clamp(96px, 22vw + 16px, 320px);
+
+  /* motion tokens */
+  --ease-out:   cubic-bezier(.22, 1, .36, 1);
+  --ease-in:    cubic-bezier(.55, 0, .68, .53);
+  --ease-spring:cubic-bezier(.34, 1.32, .64, 1);
+  --d-fast: .24s;
+  --d-base: .48s;
+  --d-slow: .9s;
+}
+
+/* ── Reset ────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box}
+html,body,h1,h2,h3,h4,p,figure,blockquote,dl,dd{margin:0}
+html{ -webkit-text-size-adjust:100%; scroll-behavior:auto; scroll-padding-top:88px; }
+body{
+  background:var(--bg); color:var(--fg);
+  font-family:var(--font-geist),"Inter",system-ui,-apple-system,Segoe UI,sans-serif;
+  font-size:var(--step-0); line-height:1.55;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  font-feature-settings:"ss01","cv11","kern","calt";
+  font-optical-sizing:auto;
+  overflow-x:hidden;
+}
+::selection{ background:var(--accent); color:#fff; }
+a{ color:inherit; text-decoration:none; }
+img,svg{ display:block; max-width:100%; }
+button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
+:focus{ outline:none; }
+:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+  border-radius:6px;
+}
+.skip-link{
+  position:fixed; top:8px; left:8px; z-index:200;
+  padding:10px 14px; border-radius:8px;
+  background:var(--fg); color:#000; font-weight:500;
+  transform:translateY(-200%); transition:transform .2s var(--ease-out);
+}
+.skip-link:focus-visible{ transform:none; outline:none; }
+
+/* utilities */
+.container{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:var(--pad); }
+.muted{ color:var(--muted-2); }
+.mono{
+  font-family:var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-feature-settings:"ss01","tnum","zero";
+  letter-spacing:.02em;
+}
+.balance{ text-wrap:balance; }
+
+/* Global noise overlay — kills banding on gradients */
+body::after{
+  content:""; position:fixed; inset:0; z-index:200; pointer-events:none;
+  background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>");
+  background-size:180px 180px;
+  opacity:.05; mix-blend-mode:overlay;
+}
+/* Subtle global vignette */
+body::before{
+  content:""; position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(140% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.45) 100%);
+}
+
+/* Scroll progress bar */
+.scroll-prog{
+  position:fixed; inset:0 auto auto 0; height:2px; width:100%;
+  background:transparent; z-index:80; pointer-events:none;
+}
+.scroll-prog::after{
+  content:""; display:block; height:100%;
+  transform:scaleX(var(--p, 0)); transform-origin:0 50%;
+  background:linear-gradient(90deg, var(--accent-3), var(--accent));
+  transition:transform .12s linear;
+}
+
+/* Reveals */
+/* Content is visible by default; the .js class (set before paint) opts into
+   the fade-up, so a blocked script never leaves a section blank. */
+.js .reveal{ opacity:0; transform:translateY(16px); transition:opacity .72s var(--ease-out), transform .72s var(--ease-out); }
+.js .reveal.in{ opacity:1; transform:none; }
+
+/* ── Header ───────────────────────────────────────────── */
+.header{
+  position:fixed; inset:0 0 auto 0; z-index:60;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:clamp(16px,2.6vw,28px) var(--pad);
+  transition:padding .35s var(--ease-out), background-color .35s var(--ease-out), backdrop-filter .35s var(--ease-out), border-color .35s var(--ease-out);
+  border-bottom:1px solid transparent;
+}
+.header.condensed{
+  padding-block:12px;
+  background:rgba(8,8,10,.8);
+  backdrop-filter:saturate(140%) blur(18px);
+  -webkit-backdrop-filter:saturate(140%) blur(18px);
+  border-bottom-color:var(--hairline);
+}
+.brand{
+  display:inline-flex; align-items:baseline; gap:.18em;
+  font-size:var(--step-2); font-weight:500; letter-spacing:-.022em;
+}
+.menu-btn{
+  display:inline-flex; align-items:center;
+  padding:11px 22px; border-radius:6px;
+  border:1px solid var(--hairline);
+  background:transparent;
+  font-size:var(--step-0); font-weight:400; letter-spacing:.01em; color:var(--fg-2);
+  transition:background-color .3s var(--ease-out), border-color .3s var(--ease-out), color .25s var(--ease-out);
+}
+.menu-btn:hover{ background:rgba(255,255,255,.04); border-color:var(--hairline-strong); color:var(--fg); }
+
+/* ── Menu overlay ─────────────────────────────────────── */
+.overlay{
+  position:fixed; inset:0; z-index:90;
+  visibility:hidden;
+  /* Stay visible through the slide-out (longest close delay + duration) before
+     hiding; on open it becomes visible immediately. */
+  transition:visibility 0s linear .74s;
+}
+.overlay.open{ visibility:visible; transition-delay:0s; }
+
+/* Staggered curtain — every layer slides down from the top. Prelayers lead on
+   open (colour wipe), the dark panel arrives last and covers them. On close the
+   panel leaves first, revealing the colour briefly before the prelayers follow. */
+.overlay-prelayer,
+.overlay-panel{
+  position:absolute; inset:0;
+  transform:translateY(-100%);
+  transition:transform .6s var(--ease-out);
+  will-change:transform;
+}
+.overlay-prelayer{ pointer-events:none; }
+.overlay-prelayer.p1{ z-index:1; background:var(--accent); transition-delay:.12s; }
+.overlay-prelayer.p2{ z-index:2; background:#7a1230; transition-delay:.06s; }
+.overlay-panel{
+  z-index:3;
+  background:linear-gradient(180deg,#0a0a0c 0%, #07070a 100%);
+  display:flex; flex-direction:column;
+  transition-delay:0s;
+}
+/* Open: prelayers arrive first (0, .08s), the dark panel last (.16s). */
+.overlay.open .overlay-prelayer.p1{ transform:none; transition-delay:0s; }
+.overlay.open .overlay-prelayer.p2{ transform:none; transition-delay:.08s; }
+.overlay.open .overlay-panel{ transform:none; transition-delay:.16s; }
+
+@media (prefers-reduced-motion: reduce){
+  .overlay-prelayer{ display:none; }
+  .overlay-panel{ transition:none; }
+  .overlay{ transition:none; }
+}
+.overlay-top{ display:flex; justify-content:flex-end; align-items:center; padding:clamp(16px,2.6vw,28px) var(--pad); }
+.close-btn{
+  width:48px; height:48px; display:grid; place-items:center;
+  border-radius:var(--r-sm);
+  border:1px solid var(--hairline);
+  transition:background-color .25s var(--ease-out), transform .35s var(--ease-spring);
+}
+.close-btn:hover{ background:rgba(255,255,255,.06); transform:rotate(90deg); }
+/* FlowingMenu fills the middle of the overlay; the component's own CSS
+   (FlowingMenu.css) handles the item layout and marquee. The overlay's own
+   clip-path reveal animates the whole menu in, so items stay visible by
+   default — never gated on a transition that could leave the menu blank. */
+.overlay-flow{ flex:1; min-height:0; }
+.overlay-socials{ display:flex; justify-content:center; gap:36px; padding:clamp(24px,5vh,52px) 0; font-size:var(--step--1); letter-spacing:.06em; color:var(--muted-2); }
+.overlay-socials a{ position:relative; padding:6px 2px; }
+.overlay-socials a::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:currentColor; transform:scaleX(0); transform-origin:0 50%;
+  transition:transform .45s var(--ease-out);
+}
+.overlay-socials a:hover{ color:var(--fg); }
+.overlay-socials a:hover::after{ transform:none; }
+
+/* ── Hero ─────────────────────────────────────────────── */
+.hero{
+  position:relative; height:100svh; height:100vh; overflow:hidden;
+  isolation:isolate;
+}
+/* Centre scrim — keeps the light headline readable over the bright band of the
+   gradient while leaving the colour intact toward the edges. */
+.hero-scrim{
+  position:absolute; inset:0; z-index:5; pointer-events:none;
+  background:radial-gradient(58% 48% at 50% 44%, rgba(8,8,10,.78), rgba(8,8,10,.34) 54%, transparent 78%);
+}
+.blob-hero{
+  position:absolute; inset:-15% -10% -25% -5%; z-index:0;
+  background:url('/hero-bg.avif') center center / cover no-repeat;
+  will-change:transform;
+  animation:drift 26s ease-in-out infinite alternate;
+}
+/* Grain layer specifically on the blob region — kills banding, looks filmic */
+.blob-grain{
+  position:absolute; inset:0; z-index:2; pointer-events:none;
+  background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .85 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size:220px 220px;
+  opacity:.14; mix-blend-mode:overlay;
+}
+@keyframes drift{
+  0%   { transform:translate3d(0,0,0) scale(1); }
+  50%  { transform:translate3d(-2%,1%,0) scale(1.04); }
+  100% { transform:translate3d(-3.5%,2.5%,0) scale(1.07); }
+}
+/* Headline layer — an independent full-viewport flex overlay, holding ONLY
+   the headline, truly centred (no transform hack). Centering lives here
+   (flexbox) rather than on #heroInner itself, because ClientScripts sets
+   #heroInner's `transform` inline for the scroll-parallax fade — a
+   transform-based centering trick there would get clobbered. */
+.hero-headline-layer{
+  position:absolute; inset:0; z-index:10;
+  display:flex; align-items:center; justify-content:center;
+  padding-inline:var(--pad);
+  pointer-events:none;
+}
+.hero-inner{
+  width:100%; max-width:1180px;
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+  gap:clamp(18px, 2.8vh, 34px);
+  will-change:transform;
+  pointer-events:auto;
+}
+.hero-title{
+  font-size:clamp(52px, 9vw, 96px);
+  line-height:.92; font-weight:600; letter-spacing:-.035em;
+  color:var(--fg);
+  text-transform:uppercase;
+  font-feature-settings:"ss01","ss03","kern","calt";
+  text-wrap:balance;
+}
+.hero-line{
+  max-width:34ch;
+  font-size:var(--step-1); line-height:1.45;
+  color:var(--fg-2);
+  text-wrap:balance;
+}
+
+/* ── Traveling flip-card + About-me section ───────────── */
+/* Both resting slots carry the frame so the traveling card blends into either
+   position. Hero slot holds the colour photo; about slot holds the B&W photo. */
+.intro-photo-slot,
+.am-photo-slot{
+  position:relative;
+  border-radius:var(--r-lg); overflow:hidden;
+  border:1px solid var(--hairline-strong);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.08) inset,
+    0 40px 90px -40px rgba(0,0,0,.85);
+  background:var(--overlay);
+}
+.intro-photo-slot img,
+.am-photo-slot img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+
+/* Hero corner meta — sized up so each label reads as its own typographic
+   element, filling the dead space either side of the centred photo instead
+   of sitting as a tiny caption. */
+.hero-meta{
+  position:absolute; z-index:9; bottom:clamp(24px, 4vh, 44px);
+  font-size:clamp(15px, 1.7vw, 21px); letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted); pointer-events:none;
+  opacity:0; animation:heroMetaIn .8s var(--ease-out) .5s both;
+}
+.hero-meta--r{ right:clamp(20px, 3.4vw, 52px); }
+@keyframes heroMetaIn{ to{ opacity:1; } }
+/* On narrow screens the portrait fills the bottom edge, so the label goes. */
+@media (max-width:720px){ .hero-meta{ display:none; } }
+
+/* Hero resting slot — bottom-anchored, independent of the headline. Full
+   size (296px tall) restored, but the HEIGHT is capped by a vh-based clamp:
+   on normal/tall screens (~≥940px tall) it renders at full size; only on
+   unusually short viewports does it shrink, just enough to always clear the
+   true-centred headline above it — 172px accounts for the headline's worst-
+   case half-height (~141px at the max font clamp) plus a clean ~30px gap.
+   Sizing from height (width:auto) means the aspect-ratio still holds. */
+.intro-photo-slot{
+  position:absolute; z-index:8;
+  left:50%; bottom:clamp(14px, 1.8vh, 20px); transform:translateX(-50%);
+  height:clamp(130px, calc(50vh - 172px), 296px);
+  width:auto; aspect-ratio:400/456;
+}
+
+/* The fixed traveling flip-card — JS drives transform/width/height + rotateY.
+   Two faces live in 3D, so the container carries ONLY the shadow (overflow on a
+   preserve-3d box would flatten it); each face clips + frames itself. */
+.intro-photo-travel{
+  display:none;
+  position:fixed; left:0; top:0; z-index:40;
+  pointer-events:none; will-change:transform,width,height;
+  transform-style:preserve-3d;
+  border-radius:var(--r-lg);
+  box-shadow:0 40px 90px -40px rgba(0,0,0,.85);
+}
+.intro-travel-on .intro-photo-travel{ display:block; }
+.intro-face{
+  position:absolute; inset:0;
+  border-radius:var(--r-lg); overflow:hidden;
+  border:1px solid var(--hairline-strong);
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+}
+.intro-face-front{ background:var(--overlay); }
+.intro-face-front img{ width:100%; height:100%; object-fit:cover; display:block; }
+.intro-face-back{ background:var(--overlay); transform:rotateY(180deg); }
+.intro-face-back img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+/* While travel runs, both resting slots stay (reserve layout) but hide fully
+   so no ghost frame/text sits behind the traveling card. */
+.intro-travel-on .intro-photo-slot,
+.intro-travel-on .am-photo-slot{ visibility:hidden; }
+
+/* About-me section — back to the original near-black field with a faint
+   pink/blue radial glow in opposite corners (same treatment as the legacy
+   .about section below), no grain overlay. */
+.about-me{
+  position:relative; isolation:isolate;
+  min-height:100vh; display:flex; align-items:center;
+  background:var(--bg);
+}
+.about-me > .container{ position:relative; z-index:1; }
+.am-grid{
+  margin-top:clamp(32px,5vh,56px);
+  display:grid;
+  grid-template-columns:1fr;
+  gap:clamp(28px,4vw,48px);
+  align-items:center;
+}
+.am-col{ display:flex; flex-direction:column; }
+.am-greeting{
+  font-size:var(--step-5); font-weight:500; line-height:.96; letter-spacing:-.03em;
+  color:var(--fg);
+}
+.am-lead{
+  margin-top:clamp(20px,3vh,32px); max-width:34ch;
+  font-size:var(--step-2); line-height:1.32; letter-spacing:-.012em;
+  color:var(--fg-2); text-wrap:pretty;
+}
+.am-photo-slot{
+  width:min(100%, 460px); aspect-ratio:4/5; justify-self:center;
+}
+.am-right{ gap:clamp(16px,2.4vh,24px); }
+.am-body{
+  max-width:46ch; font-size:var(--step-1); line-height:1.55;
+  color:var(--muted-2); text-wrap:pretty;
+}
+.am-cta{ align-self:flex-start; margin-top:8px; }
+
+/* Three-column editorial layout once there's room: text | portrait | text */
+@media(min-width:900px){
+  .am-grid{
+    grid-template-columns:1fr auto 1fr;
+    gap:clamp(36px,4vw,72px);
+    align-items:center;
+  }
+  .am-left{ text-align:right; align-items:flex-end; }
+  .am-lead{ margin-left:auto; }
+  .am-photo-slot{ width:clamp(340px,32vw,460px); }
+  .am-cta{ align-self:flex-start; }
+}
+
+/* Phone: same flex-column centering as desktop (self-adjusting, no vh hacks
+   needed) — just a smaller photo and tighter side padding. */
+@media(max-width:767px){
+  .hero-headline-layer{ padding-inline:30px; }
+  .hero-inner{ max-width:330px; }
+  /* Same vh-responsive-height approach as desktop, tuned for the smaller
+     mobile headline (font floors out at 52px, so its half-height is smaller —
+     ~70px covers half-height + gap here vs desktop's 172px). */
+  .intro-photo-slot{ height:clamp(110px, calc(50vh - 70px), 205px); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .intro-photo-travel{ display:none !important; }
+  .intro-travel-on .intro-photo-slot,
+  .intro-travel-on .am-photo-slot{ visibility:visible !important; }
+}
+
+/* ── Section base ─────────────────────────────────────── */
+.link-cta{
+  display:inline-flex; align-items:center; gap:12px; min-height:44px;
+  border-bottom:1px solid var(--hairline-strong);
+  font-size:var(--step-0); color:var(--fg);
+  transition:gap .3s var(--ease-out), border-color .3s var(--ease-out);
+}
+.link-cta .arrow{ transition:transform .3s var(--ease-out); }
+@media (hover:hover) and (pointer:fine){
+  .link-cta:hover{ gap:16px; border-color:var(--fg); }
+  .link-cta:hover .arrow{ transform:translate(2px,-2px); }
+}
+.section{ position:relative; padding-block:clamp(96px,14vh,180px); }
+
+/* ── Contact ──────────────────────────────────────────── */
+.contact{
+  position:relative; min-height:100vh;
+  display:flex; flex-direction:column; justify-content:space-between;
+  overflow:hidden;
+  padding-top:clamp(96px,12vw,160px);
+}
+.blob-contact{
+  position:absolute; inset:25% -8% -20% -8%; z-index:0;
+  filter:blur(80px) saturate(125%);
+  will-change:transform;
+  background:
+    radial-gradient(58% 70% at 8% 28%, rgba(14,34,32,.85), transparent 72%),
+    radial-gradient(38% 58% at 42% 48%, rgba(232,232,238,.55), transparent 72%),
+    radial-gradient(34% 56% at 56% 62%, rgba(245,180,70,.78), transparent 72%),
+    radial-gradient(42% 60% at 78% 56%, rgba(255,91,138,.92), transparent 72%),
+    radial-gradient(46% 62% at 96% 78%, rgba(220,30,70,.92), transparent 72%),
+    radial-gradient(54% 70% at 36% 92%, rgba(140,18,46,.78), transparent 72%);
+  animation:drift 28s ease-in-out infinite alternate;
+}
+.blob-contact + .blob-grain{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .85 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size:220px 220px;
+  opacity:.16; mix-blend-mode:overlay;
+}
+.ct-top{
+  position:relative; z-index:10;
+  display:grid; grid-template-columns:1fr; gap:32px; align-items:end;
+}
+@media(min-width:820px){ .ct-top{ grid-template-columns:1.1fr 1fr; gap:64px; } }
+.ct-links{ display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+.ct-btn{
+  display:inline-flex; align-items:center; gap:12px;
+  min-height:48px; padding:0 24px;
+  border:1px solid var(--hairline-strong); border-radius:var(--r-pill);
+  font-size:var(--step-0); white-space:nowrap;
+  transition:background-color .2s ease, transform 160ms var(--ease-out);
+}
+.ct-btn--primary{ background:var(--fg); color:var(--bg); border-color:var(--fg); }
+.ct-btn:active{ transform:scale(.97); }
+@media (hover:hover) and (pointer:fine){
+  .ct-btn:hover{ background:rgba(255,255,255,.08); }
+  .ct-btn--primary:hover{ background:var(--fg-2); }
+}
+.ct-head{
+  font-size:var(--step-5); line-height:1; font-weight:500;
+  letter-spacing:-.03em; text-wrap:balance;
+}
+.ct-sub{ max-width:42ch; font-size:var(--step-1); color:var(--fg-2); }
+.ct-big-wrap{ position:relative; z-index:10; overflow:hidden; display:flex; justify-content:center; }
+.ct-big{
+  white-space:nowrap; text-align:center; padding-inline:var(--pad);
+  font-size:clamp(58px, 14vw, 210px); line-height:.86; font-weight:500;
+  letter-spacing:-.04em; color:var(--fg); opacity:.92;
+}
+.ct-foot{
+  position:relative; z-index:10;
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:20px;
+  padding-block:28px; font-size:var(--step--1); color:var(--fg-2);
+  border-top:1px solid var(--hairline);
+}
+.ct-foot a{ position:relative; display:inline-flex; align-items:center; min-height:44px; }
+.ct-foot a::after{
+  content:""; position:absolute; left:0; right:0; bottom:10px; height:1px;
+  background:currentColor; transform:scaleX(0); transform-origin:0 50%;
+  transition:transform .35s var(--ease-out);
+}
+.ct-foot a:hover::after{ transform:none; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+  }
+  .js .reveal{ opacity:1 !important; transform:none !important; }
+  .blob-hero,.blob-contact{ animation:none !important; }
+}

@@ -1,0 +1,19 @@
+/node_modules
+/.next
+/out
+/build
+*.log
+.DS_Store
+.env*
+!.env.example
+next-env.d.ts
+*.tsbuildinfo
+.claude/settings.local.json
+.preview/
+.hallmark/
+
+# Local tooling notes, not part of the site
+/.claude/
+/.impeccable/
+/PRODUCT.md
+/DESIGN.md
