@@ -112,7 +112,7 @@ export const site = {
       description:
         "An interactive periodic table where every element opens a 3D model of its atom, drawn with Three.js from its electron shells. It began as a one-day team project; I rebuilt it.",
       tags: ["React", "TypeScript", "Three.js"],
-      href: "",
+      href: "https://kalpkj.github.io/Atomix/",
       code: "https://github.com/KalpKJ/Atomix",
     },
   ],
