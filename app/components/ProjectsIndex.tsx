@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
-import { site, type Project } from "../content";
+import { site, type OtherProject, type Project } from "../content";
 import "./ProjectsIndex.css";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -12,7 +12,7 @@ function Arrow() {
   return <span aria-hidden="true">↗</span>;
 }
 
-function Links({ p }: { p: Project }) {
+function Links({ p }: { p: Project | OtherProject }) {
   if (!p.href && !p.code) return null;
   return (
     <div className="pjx-links">
@@ -30,7 +30,7 @@ function Links({ p }: { p: Project }) {
   );
 }
 
-function Tags({ p }: { p: Project }) {
+function Tags({ p }: { p: Project | OtherProject }) {
   return (
     <ul className="pjx-tags" aria-label="Built with">
       {p.tags.map((t) => (
@@ -142,6 +142,21 @@ export function ProjectsIndex() {
               </li>
             ))}
           </ol>
+
+          {/* Smaller personal projects: links only, no screenshots. */}
+          <div className="pjx-other">
+            <h3 className="pjx-other-title">Other projects</h3>
+            <ul className="pjx-other-list">
+              {site.otherProjects.map((p) => (
+                <li key={p.name} className="pjx-other-item">
+                  <h4 className="pjx-other-name">{p.name}</h4>
+                  <p className="pjx-desc">{p.description}</p>
+                  <Tags p={p} />
+                  <Links p={p} />
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
     </MotionConfig>

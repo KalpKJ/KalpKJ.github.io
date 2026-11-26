@@ -6,6 +6,7 @@ export const site = {
   menu: [
     { label: "home", href: "#home" },
     { label: "projects", href: "#portfolio" },
+    { label: "experience", href: "#experience" },
     { label: "interests", href: "#off-the-clock" },
     { label: "contact", href: "#contact" },
   ],
@@ -40,36 +41,12 @@ export const site = {
     title: "Things I've designed and built.",
     projects: [
       {
-        name: "Ask the Gita",
-        description:
-          "Ask a question and read the Bhagavad Gita verses that answer it. All 701 verses are searched in the browser with a small embedding model, and a local Llama model can write a short answer that cites them.",
-        tags: ["React", "TypeScript", "Transformers.js", "Ollama"],
-        kind: "Web app",
-        year: "2026",
-        image: "/projects/ask-the-gita.webp",
-        alt: "Ask the Gita: the question box beside a painting of Krishna showing Arjuna his universal form",
-        href: "https://kalpkj.github.io/ask-the-gita/",
-        code: "https://github.com/KalpKJ/ask-the-gita",
-      },
-      {
-        name: "Sundarkand",
-        description:
-          "The complete Sundarkand of the Ramcharitmanas, in Devanagari with roman letters and an English translation, laid out to read like a printed pothi.",
-        tags: ["React", "TypeScript", "Vite"],
-        kind: "Reading site",
-        year: "2026",
-        image: "/projects/sundarkand.webp",
-        alt: "Sundarkand: the opening page with a painting and the first verse",
-        href: "https://kalpkj.github.io/sundarkand/",
-        code: "https://github.com/KalpKJ/sundarkand",
-      },
-      {
         name: "Buildora",
         description:
-          "The website for Buildora, which builds websites and growth systems for startups. I led the development and designed the interface.",
+          "Buildora is the web studio I co-founded with two others to build websites for clients. I built its own site and lead the development.",
         tags: ["Next.js", "React", "Tailwind", "Java", "Python"],
-        kind: "Website",
-        year: "2025",
+        kind: "My studio",
+        year: "2026",
         image: "/projects/buildora.webp",
         alt: "Buildora home page",
         href: "https://buildoraonline.com",
@@ -80,7 +57,7 @@ export const site = {
         description: "A Shopify store for a client who makes custom-height wine displays, with full-width product photography.",
         tags: ["Shopify", "Liquid"],
         kind: "Client store",
-        year: "2025",
+        year: "2026",
         image: "/projects/kvsche.webp",
         alt: "KVSCHE store front with a wine display",
         href: "https://kvsche.com",
@@ -88,10 +65,11 @@ export const site = {
       },
       {
         name: "Happy Brides",
-        description: "A site for a bridal boutique, built on Weebly, where brides can browse dresses and book an appointment.",
+        description:
+          "A site for a bridal boutique, built on Weebly in a week, where brides can browse the collections and book an appointment.",
         tags: ["Weebly"],
         kind: "Client site",
-        year: "2024",
+        year: "2026",
         image: "/projects/happybrides.webp",
         alt: "Happy Brides home page with bridal photography",
         href: "https://happybrides.ca",
@@ -112,6 +90,61 @@ export const site = {
     ],
   },
 
+  otherProjects: [
+    {
+      name: "Ask the Gita",
+      description:
+        "Ask a question and read the Bhagavad Gita verses that answer it. All 701 verses are searched in the browser, and a local Llama model can write a short answer that cites them.",
+      tags: ["React", "TypeScript", "Transformers.js", "Ollama"],
+      href: "https://kalpkj.github.io/ask-the-gita/",
+      code: "https://github.com/KalpKJ/ask-the-gita",
+    },
+    {
+      name: "Sundarkand",
+      description:
+        "The complete Sundarkand of the Ramcharitmanas in Devanagari, roman letters and English, laid out to read like a printed pothi.",
+      tags: ["React", "TypeScript", "Vite"],
+      href: "https://kalpkj.github.io/sundarkand/",
+      code: "https://github.com/KalpKJ/sundarkand",
+    },
+  ],
+
+  experience: {
+    title: "Where I've worked and studied.",
+    items: [
+      {
+        when: "Jul 2026 – now",
+        role: "Co-founder",
+        org: "Buildora",
+        href: "https://buildoraonline.com",
+        note: "A web studio I run with two others, building websites for clients alongside school.",
+      },
+      {
+        when: "Aug 2026",
+        role: "Web developer",
+        org: "Happy Brides",
+        href: "https://happybrides.ca",
+        note: "Built the boutique's Weebly site in a week.",
+      },
+      {
+        when: "Jun – Jul 2026",
+        role: "Shopify developer",
+        org: "KVSCHE",
+        href: "https://kvsche.com",
+        note: "Two months building and customizing the client's Shopify store.",
+      },
+      {
+        when: "Expected Dec 2026",
+        role: "Bachelor of Computer Science",
+        org: "University of Manitoba",
+        href: "",
+        note: "Courses include artificial intelligence, database systems, analysis of algorithms and object-oriented programming.",
+      },
+    ],
+    resume: "/Kalp_Joshi_Resume.pdf",
+    resumeLabel: "Download my résumé (PDF)",
+  },
+
   interests: {
     title: "Off the clock, I paint, watch anime and play chess.",
   },
@@ -125,3 +158,4 @@ export const site = {
 
 export type Site = typeof site;
 export type Project = Site["portfolio"]["projects"][number];
+export type OtherProject = Site["otherProjects"][number];
