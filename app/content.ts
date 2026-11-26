@@ -107,6 +107,14 @@ export const site = {
       href: "https://kalpkj.github.io/sundarkand/",
       code: "https://github.com/KalpKJ/sundarkand",
     },
+    {
+      name: "Atomix",
+      description:
+        "An interactive periodic table where every element opens a 3D model of its atom, drawn with Three.js from its electron shells. It began as a one-day team project; I rebuilt it.",
+      tags: ["React", "TypeScript", "Three.js"],
+      href: "",
+      code: "https://github.com/KalpKJ/Atomix",
+    },
   ],
 
   experience: {
