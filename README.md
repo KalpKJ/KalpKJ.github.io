@@ -8,7 +8,8 @@ My personal site: who I am, what I've built, and what I do away from the screen.
 
 ## What's on it
 
-- **Projects**: Ask the Gita, Sundarkand, Buildora, KVSCHE, Happy Brides and ExerGen. On a wide screen, hovering a project shows its screenshot and links. On a phone they stack.
+- **Projects**: Buildora, KVSCHE, Happy Brides and ExerGen. On a wide screen, hovering a project shows its screenshot and links; on a phone they stack. Below them, Ask the Gita and Sundarkand are listed as other projects, with links only.
+- **Experience**: Buildora, the client work and my degree, with my résumé as a PDF.
 - **Off the clock**: my own paintings in a 3D carousel, the anime I've watched, and a chess puzzle you can play on the board.
 - **Contact**: LinkedIn and GitHub.
 
@@ -33,4 +34,4 @@ Every push to `main` is type-checked, built and deployed by `.github/workflows/d
 
 ## Licence
 
-The code is MIT licensed (see `LICENSE`). The photos of me and the artwork in `public/art` are mine, all rights reserved; please don't reuse them.
+The code is MIT licensed (see `LICENSE`). The photos of me, my résumé and the artwork in `public/art` are mine, all rights reserved; please don't reuse them.

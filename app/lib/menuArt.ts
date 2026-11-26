@@ -36,6 +36,9 @@ export const menuArt: Record<string, string> = {
       '<rect x="114" y="16" width="12" height="32" rx="3"/>' +
     "</g>"
   ),
+  experience: wrap(
+    '<g fill="none" stroke="url(#a)" stroke-width="3" stroke-linecap="round"><path d="M60 32 H140"/></g><g fill="url(#a)"><circle cx="72" cy="32" r="6"/><circle cx="100" cy="32" r="6"/><circle cx="128" cy="32" r="6"/></g>'
+  ),
   interests: wrap(
     '<g fill="none" stroke="url(#a)" stroke-width="3"><rect x="84" y="16" width="32" height="32" rx="4"/><path d="M84 32 H116 M100 16 V48"/></g>'
   ),

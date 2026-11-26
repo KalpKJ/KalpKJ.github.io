@@ -37,6 +37,9 @@ export function Contact() {
                   <ArrowIcon />
                 </a>
               ))}
+              <a href={site.experience.resume} download className="ct-btn">
+                Résumé (PDF)
+              </a>
             </div>
           </div>
         </div>
