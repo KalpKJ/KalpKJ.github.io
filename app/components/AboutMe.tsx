@@ -94,10 +94,15 @@ export function AboutMe() {
 
       // Flat rotateY (no perspective) keeps the image an undistorted rectangle —
       // it compresses uniformly as it turns instead of skewing into a trapezoid.
+      // Whole pixels keep the photo crisp: a fractional offset makes the
+      // browser resample it. At rest (no flip) skip the 3D rotation too, so
+      // the card is drawn as a plain image rather than a 3D layer.
+      const x = Math.round(left);
+      const y = Math.round(top);
       travel.style.transform =
-        `translate3d(${left.toFixed(1)}px, ${top.toFixed(1)}px, 0) rotateY(${ry.toFixed(1)}deg)`;
-      travel.style.width = `${w.toFixed(1)}px`;
-      travel.style.height = `${h.toFixed(1)}px`;
+        ry < 0.5 ? `translate(${x}px, ${y}px)` : `translate3d(${x}px, ${y}px, 0) rotateY(${ry.toFixed(1)}deg)`;
+      travel.style.width = `${Math.round(w)}px`;
+      travel.style.height = `${Math.round(h)}px`;
       raf = requestAnimationFrame(tick);
     };
 

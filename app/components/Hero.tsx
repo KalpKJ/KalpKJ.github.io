@@ -22,7 +22,7 @@ export function Hero() {
           for phones and reduced motion. */}
       <div className="intro-photo-slot" id="introSlotHero" aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={site.intro.photo} alt="" width={900} height={1200} fetchPriority="high" decoding="async" />
+        <img src={site.intro.photo} alt="" width={1200} height={1600} fetchPriority="high" decoding="async" />
       </div>
 
       <span className="hero-meta hero-meta--r mono" aria-hidden="true">
