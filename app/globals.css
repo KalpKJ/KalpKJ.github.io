@@ -222,7 +222,16 @@ body::before{
 }
 .blob-hero{
   position:absolute; inset:-15% -10% -25% -5%; z-index:0;
-  background:url('/hero-bg.avif') center center / cover no-repeat;
+  /* Hand-built gradient: dark top-left, ember red low-left, an amber band and
+     magenta on the right, under a faint 84px grid with a cross in each cell. */
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='84' height='84'><g fill='none' stroke='white' stroke-opacity='.07'><path d='M0 .5H84M.5 0V84'/></g><path d='M42 38v8M38 42h8' stroke='white' stroke-opacity='.12'/></svg>") center / 84px 84px,
+    radial-gradient(48% 40% at 88% 30%, rgba(255,160,170,.32), transparent 70%),
+    radial-gradient(60% 22% at 78% 62%, rgba(214,160,20,.55), transparent 72%),
+    radial-gradient(55% 50% at 96% 78%, rgba(236,40,96,.75), transparent 72%),
+    radial-gradient(70% 55% at 10% 72%, rgba(170,38,24,.7), transparent 72%),
+    radial-gradient(80% 50% at 50% 100%, rgba(160,24,30,.85), transparent 75%),
+    linear-gradient(180deg, #0b0c0c 0%, #120a09 45%, #3a0d0c 100%);
   will-change:transform;
   animation:drift 26s ease-in-out infinite alternate;
 }
