@@ -92,6 +92,14 @@ export const site = {
 
   otherProjects: [
     {
+      name: "Jutsu",
+      description:
+        "Make Naruto hand seals at your webcam and cast the jutsu. An object detector recognises 13 seals on your device, and a WebGL shader draws your camera as a manga panel that bursts into colour on every cast.",
+      tags: ["React", "TypeScript", "ONNX Runtime", "WebGL"],
+      href: "https://kalpkj.github.io/jutsu/",
+      code: "https://github.com/KalpKJ/jutsu",
+    },
+    {
       name: "Ask the Gita",
       description:
         "Ask a question and read the Bhagavad Gita verses that answer it. All 701 verses are searched in the browser, and a local Llama model can write a short answer that cites them.",
