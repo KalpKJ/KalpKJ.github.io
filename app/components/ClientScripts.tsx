@@ -7,7 +7,6 @@ export function ClientScripts() {
   useEffect(() => {
     const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const cleanups: Array<() => void> = [];
-    const rafs: number[] = [];
 
     const on = (
       target: Window | Document | HTMLElement,
@@ -80,45 +79,20 @@ export function ClientScripts() {
       on(window, "resize", ctTick);
     }
 
-    // ── Hero blob + about float pointer parallax ──
-    if (!RM) {
-      const blob = document.querySelector<HTMLElement>(".blob-hero");
-      const floats = Array.from(document.querySelectorAll<HTMLElement>("[data-parallax]"));
-      let rmx = 0,
-        rmy = 0;
-      const move = (e: PointerEvent) => {
-        rmx = e.clientX / window.innerWidth - 0.5;
-        rmy = e.clientY / window.innerHeight - 0.5;
-      };
-      on(window, "pointermove", move as EventListener);
-      let alive = true;
-      const tick = () => {
-        if (!alive) return;
-        const ry = window.scrollY || 0;
-        if (blob) blob.style.transform = `translate3d(${(rmx * 18).toFixed(1)}px, ${(-ry * 0.08 + rmy * 12).toFixed(1)}px, 0)`;
-        floats.forEach((f) => {
-          const k = parseFloat(f.dataset.parallax || "0.05");
-          f.style.setProperty("--px", (rmx * 14 * (k * 10)).toFixed(1) + "px");
-          f.style.setProperty("--py", (rmy * 10 * (k * 10)).toFixed(1) + "px");
-        });
-        rafs.push(requestAnimationFrame(tick));
-      };
-      rafs.push(requestAnimationFrame(tick));
-      cleanups.push(() => {
-        alive = false;
-      });
-    }
-
     // ── Lenis smooth scroll ──
-    if (!RM) {
+    // It only smooths the mouse wheel, so touch screens keep native scrolling
+    // and skip its per-frame loop.
+    if (!RM && !matchMedia("(pointer: coarse)").matches) {
       const lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
       let alive = true;
+      let id = 0;
       const raf = (t: number) => {
         if (!alive) return;
         lenis.raf(t);
-        rafs.push(requestAnimationFrame(raf));
+        id = requestAnimationFrame(raf);
       };
-      rafs.push(requestAnimationFrame(raf));
+      id = requestAnimationFrame(raf);
+      cleanups.push(() => cancelAnimationFrame(id));
       const onClick = (e: MouseEvent) => {
         const a = (e.target as HTMLElement).closest('a[href^="#"]') as HTMLAnchorElement | null;
         if (!a) return;
@@ -138,7 +112,6 @@ export function ClientScripts() {
     }
 
     return () => {
-      rafs.forEach((id) => cancelAnimationFrame(id));
       cleanups.forEach((fn) => fn());
     };
   }, []);

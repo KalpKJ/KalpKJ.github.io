@@ -6,8 +6,11 @@ import { indicatorTransition, panelVariants } from "./anim";
 import type { Tag, TagId } from "./types";
 import { site } from "../../content";
 import IllustrationPanel from "./panels/IllustrationPanel";
-import AnimePanel from "./panels/AnimePanel";
-import ChessPanel from "./panels/ChessPanel";
+import dynamic from "next/dynamic";
+
+// Only the art panel shows at first; the other two load when their tab opens.
+const AnimePanel = dynamic(() => import("./panels/AnimePanel"));
+const ChessPanel = dynamic(() => import("./panels/ChessPanel"));
 import "./interests.css";
 
 const TAGS: Tag[] = [

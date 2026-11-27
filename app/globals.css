@@ -226,6 +226,11 @@ body::before{
   will-change:transform;
   animation:drift 26s ease-in-out infinite alternate;
 }
+/* Phones get a 1280px copy: the full 2880px image costs half a second to
+   decode on a slow phone and looks the same at that size. */
+@media(max-width:900px){
+  .blob-hero{ background-image:url('/hero-bg-1280.avif'); }
+}
 /* Grain layer specifically on the blob region — kills banding, looks filmic */
 .blob-grain{
   position:absolute; inset:0; z-index:2; pointer-events:none;

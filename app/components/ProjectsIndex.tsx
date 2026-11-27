@@ -122,7 +122,14 @@ export function ProjectsIndex() {
                 <div className="pjx-frame">
                   {p.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={p.image} alt={p.alt} loading="lazy" decoding="async" />
+                    <img
+                      src={p.image}
+                      srcSet={`${p.image.replace(".webp", "-700.webp")} 700w, ${p.image} 1400w`}
+                      sizes="(max-width: 767px) 92vw, 700px"
+                      alt={p.alt}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   ) : (
                     <div className="pjx-noimg">
                       <span className="pjx-noimg-name">{p.name}</span>

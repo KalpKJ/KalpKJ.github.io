@@ -44,11 +44,13 @@ export function AboutMe() {
       document.documentElement.classList.toggle("intro-travel-on", on);
     };
 
+    // Runs once per frame only while something moved (scroll, resize or a
+    // layout change), so an idle page does no work at all.
     const tick = () => {
+      raf = 0;
       if (!alive) return;
       if (!enabled()) {
         setActive(false);
-        raf = requestAnimationFrame(tick);
         return;
       }
       setActive(true);
@@ -103,13 +105,23 @@ export function AboutMe() {
         ry < 0.5 ? `translate(${x}px, ${y}px)` : `translate3d(${x}px, ${y}px, 0) rotateY(${ry.toFixed(1)}deg)`;
       travel.style.width = `${Math.round(w)}px`;
       travel.style.height = `${Math.round(h)}px`;
-      raf = requestAnimationFrame(tick);
     };
 
-    raf = requestAnimationFrame(tick);
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    const ro = new ResizeObserver(schedule);
+    ro.observe(document.body);
+    schedule();
     return () => {
       alive = false;
       cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      ro.disconnect();
       document.documentElement.classList.remove("intro-travel-on");
     };
   }, []);
@@ -121,11 +133,11 @@ export function AboutMe() {
       <div ref={travelRef} className="intro-photo-travel" aria-hidden="true">
         <div className="intro-face intro-face-front">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={t.photo} alt="" decoding="async" />
+          <img src={t.photo} srcSet={t.photoSrcSet} sizes="460px" alt="" loading="lazy" decoding="async" />
         </div>
         <div className="intro-face intro-face-back">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={t.photoBw} alt="" decoding="async" />
+          <img src={t.photoBw} srcSet={t.photoBwSrcSet} sizes="460px" alt="" loading="lazy" decoding="async" />
         </div>
       </div>
 
@@ -142,7 +154,16 @@ export function AboutMe() {
                 travel is active, since the traveling card lands here). */}
             <div className="am-photo-slot" id="introSlotAbout" ref={aboutSlotRef}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={t.photoBw} alt={t.photoAlt} decoding="async" />
+              <img
+                src={t.photoBw}
+                srcSet={t.photoBwSrcSet}
+                sizes="(max-width: 767px) 90vw, 460px"
+                alt={t.photoAlt}
+                width={1000}
+                height={1333}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
 
             <div className="am-col am-right">

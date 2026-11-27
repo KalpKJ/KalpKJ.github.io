@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { site } from "../content";
-import FlowingMenu from "./FlowingMenu";
+import dynamic from "next/dynamic";
+
+// The menu (and GSAP with it) loads when someone reaches for the button,
+// not with the page.
+const FlowingMenu = dynamic(() => import("./FlowingMenu"), { ssr: false });
 import { menuArtFor } from "../lib/menuArt";
 
 const menuItems = site.menu.map((m) => ({
@@ -14,6 +18,8 @@ const menuItems = site.menu.map((m) => ({
 export function Header() {
   const [open, setOpen] = useState(false);
   const [condensed, setCondensed] = useState(false);
+  const [menuWanted, setMenuWanted] = useState(false);
+  const wantMenu = () => setMenuWanted(true);
   const openBtnRef = useRef<HTMLButtonElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
@@ -59,7 +65,12 @@ export function Header() {
           className="menu-btn"
           aria-expanded={open}
           aria-controls="overlay"
-          onClick={() => setOpen(true)}
+          onPointerEnter={wantMenu}
+          onFocus={wantMenu}
+          onClick={() => {
+            wantMenu();
+            setOpen(true);
+          }}
         >
           menu
         </button>
@@ -88,16 +99,18 @@ export function Header() {
           </div>
 
           <div className="overlay-flow" aria-label="Primary">
-            <FlowingMenu
-              items={menuItems}
-              onItemClick={() => setOpen(false)}
-              speed={18}
-              bgColor="transparent"
-              textColor="#f5f5f7"
-              marqueeBgColor="#f4f4f5"
-              marqueeTextColor="#08080a"
-              borderColor="rgba(255,255,255,0.12)"
-            />
+            {menuWanted && (
+              <FlowingMenu
+                items={menuItems}
+                onItemClick={() => setOpen(false)}
+                speed={18}
+                bgColor="transparent"
+                textColor="#f5f5f7"
+                marqueeBgColor="#f4f4f5"
+                marqueeTextColor="#08080a"
+                borderColor="rgba(255,255,255,0.12)"
+              />
+            )}
           </div>
 
           <div className="overlay-socials">

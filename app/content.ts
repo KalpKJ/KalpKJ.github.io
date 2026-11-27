@@ -28,8 +28,10 @@ export const site = {
     ctaLabel: "get in touch",
     ctaHref: "#contact",
     photo: "/me.webp",
+    photoSrcSet: "/me-600.webp 600w, /me.webp 1200w",
     photoAlt: "Kalp Joshi, sitting at a table with his arms crossed",
     photoBw: "/me-bw.webp",
+    photoBwSrcSet: "/me-bw-600.webp 600w, /me-bw-800.webp 800w, /me-bw.webp 1000w",
   },
 
   socials: [

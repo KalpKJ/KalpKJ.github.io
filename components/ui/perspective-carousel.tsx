@@ -5,6 +5,9 @@ import { motion, type Transition } from "framer-motion";
 
 export interface PerspectiveCarouselItem {
   src: string;
+  /** Intrinsic size, so the browser can reserve the box before the image loads. */
+  width?: number;
+  height?: number;
   title: string;
   alt?: string;
 }
@@ -198,6 +201,10 @@ export function PerspectiveCarousel({
                       src={item.src}
                       alt={item.alt ?? item.title}
                       draggable={false}
+                      width={item.width}
+                      height={item.height}
+                      loading="lazy"
+                      decoding="async"
                       style={{
                         width: "100%",
                         height: naturalSize ? "auto" : "100%",
@@ -263,7 +270,7 @@ export function PerspectiveCarousel({
           </button>
 
           {showDots && (
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
               {items.map((it, index) => {
                 const on = current === index;
                 return (
@@ -274,16 +281,30 @@ export function PerspectiveCarousel({
                     aria-current={on ? "true" : undefined}
                     onClick={() => select(index)}
                     style={{
-                      height: 8,
-                      width: on ? 28 : 8,
-                      borderRadius: 999,
+                      // A 24px hit area around the small visible dot.
+                      display: "grid",
+                      placeItems: "center",
+                      height: 24,
+                      minWidth: on ? 40 : 24,
                       padding: 0,
                       border: 0,
                       cursor: "pointer",
-                      background: on ? "var(--accent)" : "rgba(255,255,255,.35)",
-                      transition: "width .3s var(--ease-out), background-color .3s var(--ease-out)",
+                      background: "none",
                     }}
-                  />
+                  >
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        display: "block",
+                        height: 8,
+                        width: 8,
+                        borderRadius: 999,
+                        background: on ? "var(--accent)" : "rgba(255,255,255,.35)",
+                        transform: on ? "scaleX(3.5)" : "none",
+                        transition: "transform .3s var(--ease-out), background-color .3s var(--ease-out)",
+                      }}
+                    />
+                  </button>
                 );
               })}
             </div>
